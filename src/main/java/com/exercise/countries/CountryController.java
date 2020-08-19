@@ -49,9 +49,20 @@ public class CountryController {
         countries = response.getBody();
     }   
     
-	@GetMapping("/country")
-	public Country country() {
-		return new Country("Finland", "FI", 5491817, "file.png");
+	@GetMapping("/countries")
+	public CountryShort[] country() {
+        // return new Country("Finland", "FI", 5491817, "file.png");
+        var lstCountries = Arrays.asList(countries);
+        // Predicate<Country> byName = country -> country.getName().equals(name);
+        var resultLst = lstCountries.stream()
+            .map(country -> {
+                CountryShort countSm = new CountryShort(country.getName(), country.getCountryCode());
+                return countSm;
+            })
+            .collect(Collectors.toList()); // Collect stream and convert to List
+        CountryShort[] resultArr = new CountryShort[resultLst.size()];
+        resultArr = resultLst.toArray(resultArr);
+        return resultArr;
     }
     
     @GetMapping("/countrytest")
@@ -76,7 +87,7 @@ public class CountryController {
         var lstCountries = Arrays.asList(countries);
         Predicate<Country> byName = country -> country.getName().equals(name);
         var result = lstCountries.stream().filter(byName)
-        .collect(Collectors.toList());
+                                    .collect(Collectors.toList());
         return result.get(0);
         //TODO: Error handling, when name is invalid
 	} 
