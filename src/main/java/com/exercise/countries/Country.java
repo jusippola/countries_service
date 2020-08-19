@@ -3,6 +3,7 @@ package com.exercise.countries;
 import java.util.Objects;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //"name": "Finland",
 //"country_code": "FI",
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 // "population": 5491817,
 // "flag_file_url": "<url to the flag file>"
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
     private final String name;
     private final String countryCode;
@@ -17,8 +19,12 @@ public class Country {
     private final String flagFileUrl;
 
 
-    // public Country() {
-    // }
+    public Country() {
+        this.name = "";
+        this.countryCode = "";
+        this.population = 0;
+        this.flagFileUrl = "";
+    }
 
     public Country(String name, String countryCode, long population, String flagFileUrl) {
         this.name = name;
