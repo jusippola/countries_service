@@ -19,12 +19,12 @@ public class Country {
     private final String flagFileUrl;
 
 
-    public Country() {
-        this.name = "";
-        this.countryCode = "";
-        this.population = 0;
-        this.flagFileUrl = "";
-    }
+    // public Country() {
+    //     this.name = "";
+    //     this.countryCode = "";
+    //     this.population = 0;
+    //     this.flagFileUrl = "";
+    // }
 
     public Country(String name, String countryCode, long population, String flagFileUrl) {
         this.name = name;

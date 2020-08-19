@@ -11,6 +11,11 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.springframework.util.CollectionUtils;
+import java.util.List;
+import java.util.Arrays;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @RestController
 public class CountryController {
@@ -39,7 +44,6 @@ public class CountryController {
 
         ResponseEntity<Country[]> response =
         restTemplate.getForEntity(
-            // "https://restcountries.eu/rest/v2/name/Finland",
             "https://restcountries.eu/rest/v2/all",
             Country[].class);
         countries = response.getBody();
@@ -69,7 +73,12 @@ public class CountryController {
 
     @GetMapping("/countries/{name}")
 	public Country country2(@PathVariable String name) {
-		return new Country(name, "FI", 5491817, "file.png");
+        var lstCountries = Arrays.asList(countries);
+        Predicate<Country> byName = country -> country.getName().equals(name);
+        var result = lstCountries.stream().filter(byName)
+        .collect(Collectors.toList());
+        return result.get(0);
+        //TODO: Error handling, when name is invalid
 	} 
 
 //   // Single item
