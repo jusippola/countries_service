@@ -3,10 +3,13 @@ package com.exercise.countries;
 import java.util.Objects;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * This class use used by the "/countries" GET handler. The
+ * handler returns the list containing the items of CountryShort
+ * objects.
+ */
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-//@JsonIgnoreProperties(ignoreUnknown = true)
 public class CountryShort {
     private final String name;
     private final String countryCode;
@@ -20,11 +23,9 @@ public class CountryShort {
         return this.name;
     }
 
-
     public String getCountryCode() {
         return this.countryCode;
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -16,32 +16,34 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 @RestController
 public class CountryController {
 
     private RestTemplate restTemplate;
-    // private EuCountry[] countries;
     private Country[] countries;   
 
     @Autowired
     public CountryController(RestTemplateBuilder builder) {
+        this.restTemplate = builder.build();
+        
+        //Set custom deserializer for mapping the property names
+        //received from "https://restcountries.eu/rest/v2/all"
+        //into the attribute names of the class Country.
+        //More info:
+        // -https://www.baeldung.com/jackson-deserialization
+        // -https://dzone.com/articles/configuring-a-custom-objectmapper-for-spring-restt
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Country.class, new CountryDeserializer());
         mapper.registerModule(module);
- 
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(mapper);
-        this.restTemplate = builder.build();
         this.restTemplate.getMessageConverters().add(0, converter);
 
-        // ResponseEntity<Country[]> response =
-        // restTemplate.getForEntity(
-        //     // "https://restcountries.eu/rest/v2/name/Finland",
-        //     "https://restcountries.eu/rest/v2/all",
-        //     Country[].class);
-
+        //Initialize the countries array from "https://restcountries.eu/rest/v2/all"
         ResponseEntity<Country[]> response =
         restTemplate.getForEntity(
             "https://restcountries.eu/rest/v2/all",
@@ -51,9 +53,7 @@ public class CountryController {
     
 	@GetMapping("/countries")
 	public CountryShort[] country() {
-        // return new Country("Finland", "FI", 5491817, "file.png");
         var lstCountries = Arrays.asList(countries);
-        // Predicate<Country> byName = country -> country.getName().equals(name);
         var resultLst = lstCountries.stream()
             .map(country -> {
                 CountryShort countSm = new CountryShort(country.getName(), country.getCountryCode());
@@ -64,23 +64,6 @@ public class CountryController {
         resultArr = resultLst.toArray(resultArr);
         return resultArr;
     }
-    
-    @GetMapping("/countrytest")
-    // public EuCountry[] countryTest() {
-    public Country[] countryTest() {        
-        // ResponseEntity<EuCountry[]> response =
-        // restTemplate.getForEntity(
-        //     // "https://restcountries.eu/rest/v2/name/Finland",
-        //     "https://restcountries.eu/rest/v2/all",
-        //     EuCountry[].class);
-        // EuCountry[] euCountries = response.getBody();
-        
-        // // ObjectMapper mapper = new ObjectMapper();
-        // // EuCountry euCountry = restTemplate.getForObject(
-        // //             "https://restcountries.eu/rest/v2/name/Finland", EuCountry.class);
-        // return euCountries;
-        return countries;         
-    }
 
     @GetMapping("/countries/{name}")
 	public Country country2(@PathVariable String name) {
@@ -88,24 +71,13 @@ public class CountryController {
         Predicate<Country> byName = country -> country.getName().equals(name);
         var result = lstCountries.stream().filter(byName)
                                     .collect(Collectors.toList());
-        return result.get(0);
-        //TODO: Error handling, when name is invalid
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        else {
+            
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Not Found");
+        }
 	} 
-
-//   // Single item
-
-//   @GetMapping("/employees/{id}")
-//   Employee one(@PathVariable Long id) {
-
-//     return repository.findById(id)
-//       .orElseThrow(() -> new EmployeeNotFoundException(id));
-//   }
-
-	// private static final String template = "Hello, %s!";
-	// private final AtomicLong counter = new AtomicLong();
-
-	// @GetMapping("/greeting")
-	// public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-	// 	return new Greeting(counter.incrementAndGet(), String.format(template, name));
-	// }
 }

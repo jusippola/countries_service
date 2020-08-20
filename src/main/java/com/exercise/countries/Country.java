@@ -5,11 +5,19 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-//"name": "Finland",
-//"country_code": "FI",
-//"capital": "Helsinki",
-// "population": 5491817,
-// "flag_file_url": "<url to the flag file>"
+/**
+ * This is the class which is used by CountryController to store
+ * the country resources internally. Also the Get handler "/countries/{name}"
+ * returns this object as a return value.
+ * 
+ * Mapping between the class attribute names and the JSON object property names
+ * is the following:   "name" -> "name"
+ *                     "countryCode" -> "country_code"
+ *                     "population" -> "population"
+ *                     "flagFileUrl" -> "flag_file_url"
+ * 
+ * Note that SnakeCaseStrategy is used here. 
+ */
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 //@JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
@@ -17,14 +25,6 @@ public class Country {
     private final String countryCode;
     private final long population;
     private final String flagFileUrl;
-
-
-    // public Country() {
-    //     this.name = "";
-    //     this.countryCode = "";
-    //     this.population = 0;
-    //     this.flagFileUrl = "";
-    // }
 
     public Country(String name, String countryCode, long population, String flagFileUrl) {
         this.name = name;
@@ -77,21 +77,5 @@ public class Country {
             ", population='" + getPopulation() + "'" +
             ", flagFileUrl='" + getFlagFileUrl() + "'" +
             "}";
-    }
-
-
-    
-    // public Greeting(long id, String content) {
-	// 	this.id = id;
-	// 	this.content = content;
-	// }
-
-	// public long getId() {
-	// 	return id;
-	// }
-
-	// public String getContent() {
-	// 	return content;
-	// }
-   
+    }   
 }
