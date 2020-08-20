@@ -32,7 +32,7 @@ The GET method of the endpoint **/countries/** returns the list of all countries
         ]
     }
 
-The end point **/countries/{name}** returns the information of a single country, where **0{name}** should be a name field of a single entry returned from the endpoint **/coutries/**. For example the endpoint **/countries/Finland** will return the following response:
+The end point **/countries/{name}** returns the information of a single country, where **{name}** should be a name field of a single entry returned from the endpoint **/coutries/**. For example the endpoint **/countries/Finland** will return the following response:
 
     {
         "name": "Finland",
